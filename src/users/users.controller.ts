@@ -1,5 +1,6 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, UnprocessableEntityException } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put } from '@nestjs/common';
 import { randomUUID } from 'crypto';
+import { CreateUserDto, UpdateUserDto } from './user.dto';
 
 interface User {
   id: string;
@@ -62,7 +63,7 @@ export class UsersController {
   }
 
   @Post()
-  createUser(@Body() body: Omit<User, 'id'>): Response {
+  createUser(@Body() body: CreateUserDto): Response {
     this.users.push({
       ...body,
       id: randomUUID(),
@@ -88,16 +89,10 @@ export class UsersController {
   }
 
   @Put(':id')
-  updateUser(@Param('id') id: string, @Body() body: Omit<User, 'id'>): Response {
+  updateUser(@Param('id') id: string, @Body() body: UpdateUserDto): Response {
     const position = this.users.findIndex((user) => user.id === id);
     if (position === -1) {
       throw new NotFoundException(`User with id ${id} not found`);
-    }
-
-    const email = body.email;
-
-    if (email && !this.validateEmail(email)) {
-      throw new UnprocessableEntityException(`Email ${email} is not valid`);
     }
 
     const updatedUser = {
@@ -111,10 +106,5 @@ export class UsersController {
       message: 'User updated successfully',
       data: this.users[position],
     };
-  }
-
-  validateEmail(email: string): boolean {
-    const emailRegex = /^(([^<>()[\]\\.,;:\s@”]+(\.[^<>()[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
-    return emailRegex.test(email);
   }
 }
