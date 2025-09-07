@@ -13,8 +13,6 @@ export class UsersController {
 
   @Get()
   findUsers() {
-    const port = this.configService.get('PORT', { infer: true });
-    console.log('port controller: ', port);
     return this.userService.findAll();
   }
 
