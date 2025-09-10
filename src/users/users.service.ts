@@ -65,4 +65,16 @@ export class UsersService {
 
     return user.profile;
   }
+
+  async getPostsByUserId(id: User['id']) {
+    const user = await this.usersRepository.findOne({
+      where: { id },
+      relations: ['posts'],
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User ${id} not found`);
+    }
+    return user.posts;
+  }
 }
