@@ -17,7 +17,10 @@ export class PostsService {
       return await this.postsRepository
         .save({
           ...createPostDto,
+          // como lo tengo en la entidad : lo que tengo en el dto
           user: { id: createPostDto.userId },
+          // entity : dto
+          categories: createPostDto.categoryIds?.map((id) => ({ id })),
         })
         .catch();
     } catch {
@@ -27,14 +30,14 @@ export class PostsService {
 
   findAll() {
     return this.postsRepository.find({
-      relations: ['user.profile'],
+      relations: ['user.profile', 'categories'],
     });
   }
 
   async findOne(id: number) {
     const posts = await this.postsRepository.findOne({
       where: { id },
-      relations: ['user.profile'],
+      relations: ['user.profile', 'categories'],
     });
     if (!posts) {
       throw new NotFoundException(`Post ${id} not found`);
