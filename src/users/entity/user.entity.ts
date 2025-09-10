@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Profile } from './profile.entity';
 
 @Entity({
   name: 'users',
@@ -21,4 +22,8 @@ export class User {
 
   @DeleteDateColumn({ type: 'timestamptz', default: null, nullable: true, name: 'deleted_at' })
   deletedAt: Date;
+
+  @OneToOne(() => Profile, { nullable: false, cascade: true, eager: true })
+  @JoinColumn({ name: 'profile_id' })
+  profile: Profile;
 }
