@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entity/user.entity';
-import { CreateUserDto } from './user.dto';
+import { CreateUserDto, UpdateUserDto } from './user.dto';
 
 @Injectable()
 export class UsersService {
@@ -36,13 +36,24 @@ export class UsersService {
     return this.usersRepository.delete({ id });
   }
 
-  async update(id: User['id'], body: Partial<User>) {
-    const userPreload = await this.usersRepository.preload({ id, ...body });
-    if (!userPreload) {
-      throw new NotFoundException(`User ${id} not found`);
-    }
+  async update(id: User['id'], body: UpdateUserDto) {
+    try {
+      const user = await this.usersRepository.findOne({
+        where: { id },
+        relations: ['profile'],
+      });
 
-    return this.usersRepository.save(userPreload);
+      if (!user) {
+        throw new NotFoundException(`User ${id} not found`);
+      }
+
+      const userUpdate = this.usersRepository.merge(user, body);
+
+      const savedUser = await this.usersRepository.save(userUpdate);
+      return savedUser;
+    } catch {
+      throw new BadRequestException(`Error update user`);
+    }
   }
 
   async getProfileByUserId(id: User['id']) {
