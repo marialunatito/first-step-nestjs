@@ -26,11 +26,16 @@ export class PostsService {
   }
 
   findAll() {
-    return this.postsRepository.find();
+    return this.postsRepository.find({
+      relations: ['user.profile'],
+    });
   }
 
   async findOne(id: number) {
-    const posts = await this.postsRepository.findOneBy({ id });
+    const posts = await this.postsRepository.findOne({
+      where: { id },
+      relations: ['user.profile'],
+    });
     if (!posts) {
       throw new NotFoundException(`Post ${id} not found`);
     }
