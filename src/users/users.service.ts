@@ -44,4 +44,14 @@ export class UsersService {
 
     return this.usersRepository.save(userPreload);
   }
+
+  async getProfileByUserId(id: User['id']) {
+    const user = await this.usersRepository.findOneBy({ id });
+
+    if (!user) {
+      throw new NotFoundException(`User ${id} not found`);
+    }
+
+    return user.profile;
+  }
 }
