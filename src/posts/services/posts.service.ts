@@ -65,4 +65,12 @@ export class PostsService {
   deleted(id: number) {
     return this.postsRepository.delete({ id });
   }
+
+  async getPostsByCategoryId(categoryId: number) {
+    const posts = await this.postsRepository.find({
+      where: { categories: { id: categoryId } },
+    });
+
+    return posts;
+  }
 }
