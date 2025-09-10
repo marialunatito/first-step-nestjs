@@ -20,6 +20,6 @@ export class Category {
   @DeleteDateColumn({ type: 'timestamptz', default: null, nullable: true, name: 'deleted_at' })
   deletedAt: Date;
 
-  @ManyToMany(() => Post)
+  @ManyToMany(() => Post, (post) => post.categories)
   posts: Post[];
 }

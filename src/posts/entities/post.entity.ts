@@ -37,7 +37,7 @@ export class Post {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @ManyToMany(() => Category)
+  @ManyToMany(() => Category, (category) => category.posts)
   @JoinTable({
     name: 'posts_categories',
     joinColumn: { name: 'post_id', referencedColumnName: 'id' },
