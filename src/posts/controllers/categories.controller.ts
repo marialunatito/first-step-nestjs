@@ -31,4 +31,9 @@ export class CategoriesController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.categoriesService.deleted(id);
   }
+
+  @Get(':id/posts')
+  getPostsByCategoryId(@Param('id', ParseIntPipe) id: number) {
+    return this.categoriesService.getPostsByCategoryId(id);
+  }
 }
