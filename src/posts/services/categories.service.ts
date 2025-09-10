@@ -52,4 +52,17 @@ export class CategoriesService {
   deleted(id: number) {
     return this.categoriesRepository.delete({ id });
   }
+
+  async getPostsByCategoryId(id: number) {
+    const category = await this.categoriesRepository.findOne({
+      where: { id },
+      relations: ['posts'],
+    });
+
+    if (!category) {
+      throw new NotFoundException(`Category ${id} not found`);
+    }
+
+    return category.posts;
+  }
 }
