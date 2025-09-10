@@ -30,4 +30,9 @@ export class UsersController {
   updateUser(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateUserDto) {
     return this.userService.update(id, body);
   }
+
+  @Get(':id/profile')
+  getProfileByUserId(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.getProfileByUserId(id);
+  }
 }
