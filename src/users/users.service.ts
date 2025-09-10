@@ -37,14 +37,11 @@ export class UsersService {
   }
 
   async update(id: User['id'], body: Partial<User>) {
-    const user = await this.usersRepository.findOneBy({ id });
-    if (!user) {
+    const userPreload = await this.usersRepository.preload({ id, ...body });
+    if (!userPreload) {
       throw new NotFoundException(`User ${id} not found`);
     }
 
-    console.log('user: ', user);
-    console.log('body: ', body);
-    console.log('merge: ', { ...user, ...body });
-    return this.usersRepository.merge({ ...user, ...body });
+    return this.usersRepository.save(userPreload);
   }
 }
