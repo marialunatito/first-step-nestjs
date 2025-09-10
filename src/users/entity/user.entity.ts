@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Post } from '../../posts/entities/post.entity';
 import { Profile } from './profile.entity';
 
 @Entity({
@@ -26,4 +27,7 @@ export class User {
   @OneToOne(() => Profile, { nullable: false, cascade: true, eager: true })
   @JoinColumn({ name: 'profile_id' })
   profile: Profile;
+
+  @OneToMany(() => Post, (post) => post.user)
+  posts: Post[];
 }
