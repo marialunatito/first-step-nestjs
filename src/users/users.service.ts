@@ -26,9 +26,12 @@ export class UsersService {
 
   async create(body: CreateUserDto) {
     try {
-      return await this.usersRepository.save(body).catch();
-    } catch {
-      throw new BadRequestException(`Error creating user`);
+      // create do not save in DB but execute hooks
+      const newUser = this.usersRepository.create(body);
+      // yes save in DB
+      return await this.usersRepository.save(newUser);
+    } catch (error) {
+      throw new BadRequestException(`Error creating user ${(error as Error).message}`);
     }
   }
 
