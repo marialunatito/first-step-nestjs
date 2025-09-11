@@ -80,4 +80,8 @@ export class UsersService {
     }
     return user.posts;
   }
+
+  getUserByEmail(email: string) {
+    return this.usersRepository.findOneBy({ email });
+  }
 }
