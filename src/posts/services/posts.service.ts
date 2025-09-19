@@ -12,13 +12,13 @@ export class PostsService {
     private postsRepository: Repository<Post>,
   ) {}
 
-  async create(createPostDto: CreatePostDto) {
+  async create(createPostDto: CreatePostDto, userId: number) {
     try {
       return await this.postsRepository
         .save({
           ...createPostDto,
           // como lo tengo en la entidad : lo que tengo en el dto
-          user: { id: createPostDto.userId },
+          user: { id: userId },
           // entity : dto
           categories: createPostDto.categoryIds?.map((id) => ({ id })),
         })
